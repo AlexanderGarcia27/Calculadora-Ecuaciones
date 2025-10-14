@@ -23,7 +23,7 @@ Una aplicación React Native que permite resolver ecuaciones lineales simples, v
 
 1. Clona el repositorio:
    ```bash
-   git clone [url-del-repositorio]
+   git clone [https://github.com/AlexanderGarcia27/Calculadora-Ecuaciones.git]
    cd Calculadora-Ecuaciones-Lineales
    ```
 
