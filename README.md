@@ -72,4 +72,4 @@ Una aplicación React Native que permite resolver ecuaciones lineales simples, v
 
 ## 👥 Autor
 
-Alexander Garcia - [Github](https://github.com/AlexanderGarcia27-github)
+Alexander Garcia - [Github](https://github.com/AlexanderGarcia27)
