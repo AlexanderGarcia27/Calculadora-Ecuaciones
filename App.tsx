@@ -148,14 +148,14 @@ export default function App() {
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {/* Título */}
       <Text style={styles.title}>
-        Resolver Ecuaciones Lineales 💡
+        Resolver Ecuaciones Lineales
       </Text>
 
       {/* Contenedor del resultado */}
       <View style={styles.resultBox}>
         {solution ? (
           <Text style={styles.resultTextSolved}>
-            ✅ Resultado: <Text style={styles.solutionValue}>x = {solution}</Text>
+            Resultado: <Text style={styles.solutionValue}>x = {solution}</Text>
           </Text>
         ) : (
           <Text style={styles.resultTextPlaceholder}>
@@ -199,7 +199,7 @@ export default function App() {
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>
-            {showTable ? "OCULTAR GRÁFICA Y TABLA 📉" : "VER GRÁFICA Y TABLA 📈"}
+            {showTable ? "OCULTAR GRÁFICA Y TABLA" : "VER GRÁFICA Y TABLA"}
           </Text>
         </TouchableOpacity>
       )}
@@ -212,7 +212,7 @@ export default function App() {
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>
-            {showProcedure ? "OCULTAR PROCEDIMIENTO 📝" : "VER PROCEDIMIENTO 🧠"}
+            {showProcedure ? "OCULTAR PROCEDIMIENTO " : "VER PROCEDIMIENTO 🧠"}
           </Text>
         </TouchableOpacity>
       )}
@@ -243,17 +243,17 @@ export default function App() {
             width={screenWidth - 50} 
             height={220}
             chartConfig={{
-              backgroundColor: "#2E3A46",
-              backgroundGradientFrom: "#34495E",
-              backgroundGradientTo: "#2C3E50",
-              color: (opacity = 1) => `rgba(0, 191, 165, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              backgroundColor: "#e6cfcfff",
+              backgroundGradientFrom: "#f1ebebff",
+              backgroundGradientTo: "#E0F7FA",
+              color: (opacity = 1) => `rgba(0, 191, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
               strokeWidth: 2,
               decimalPlaces: 1,
               propsForDots: {
                 r: "4",
                 strokeWidth: "2",
-                stroke: "#FFC107"
+                stroke: "#e8e5deff"
               }
             }}
             style={styles.chart}
