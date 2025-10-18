@@ -12,7 +12,6 @@ import {
 import { evaluate } from "mathjs";
 import { LineChart } from "react-native-chart-kit";
 
-// Obtener el ancho de la pantalla una sola vez
 const screenWidth = Dimensions.get("window").width;
 
 interface TableItem {
@@ -65,22 +64,16 @@ export default function App() {
       // Crear tabla de valores
       const tabla: TableItem[] = [];
       for (let i = -5; i <= 5; i++) {
-        // Asegurar que la evaluación use la variable 'x' correctamente para el lado izquierdo.
-        // Se calcula el valor de 'y' para el valor de 'x' actual.
         const y = evaluate(left, { x: i }).toFixed(2);
         tabla.push({ x: i, y });
       }
 
       setSolution(x.toString());
       setTableData(tabla);
-      // Mantener el estado actual de visibilidad
-      // setShowTable(false);
       
       // Generar procedimiento simple para ecuación lineal ax + b = c
       const proc = generateProcedure(normalizeEquation(equation));
       setProcedureSteps(proc);
-      // Mantener el estado actual de visibilidad
-      // setShowProcedure(false);
     } catch (error) {
       Alert.alert("Error", "Error al procesar la ecuación. Intenta con algo como: 2x + 4 = 10");
     }
@@ -147,8 +140,8 @@ export default function App() {
     setSolution(null);
     setTableData([]);
     setShowTable(false);
-    setShowProcedure(false); // Asegurar que también se oculta el procedimiento
-    setProcedureSteps([]); // Limpiar los pasos
+    setShowProcedure(false); 
+    setProcedureSteps([]); 
   };
 
   return (
@@ -228,12 +221,10 @@ export default function App() {
       {showTable && (
           <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Tabla de Valores</Text>
-          
-          {/* ¡CAMBIO CLAVE: Reemplazamos FlatList por un View y map! */}
           <View style={styles.tableList}> 
             {tableData.map((item, index) => (
               <View 
-                key={item.x.toString()} // Key necesario al usar map
+                key={item.x.toString()} 
                 style={[styles.tableRow, index % 2 === 0 ? styles.tableRowEven : styles.tableRowOdd]}
               >
                 <Text style={styles.tableText}>$x = {item.x}$</Text>
@@ -249,7 +240,7 @@ export default function App() {
               labels: tableData.map((d) => d.x.toString()),
               datasets: [{ data: tableData.map((d) => parseFloat(d.y)) }],
             }}
-            width={screenWidth - 50} // Ajuste: 50 porque el paddingHorizontal es 25*2
+            width={screenWidth - 50} 
             height={220}
             chartConfig={{
               backgroundColor: "#2E3A46",
@@ -284,40 +275,38 @@ export default function App() {
     </ScrollView>
   );
 }
-// ===========================================
-// ESTILOS SEPARADOS (CON DISEÑO MEJORADO)
-// ===========================================
-const PRIMARY_COLOR = '#00BCD4'; // Azul Turquesa Brillante
-const SECONDARY_COLOR = '#4CAF50'; // Verde Éxito
-const ACCENT_COLOR = '#FF9800'; // Naranja para advertencias/reset
-const BACKGROUND_COLOR = '#E0F7FA'; // Fondo claro
+
+const PRIMARY_COLOR = '#00BCD4'; 
+const SECONDARY_COLOR = '#4CAF50'; 
+const ACCENT_COLOR = '#FF9800'; 
+const BACKGROUND_COLOR = '#E0F7FA';
 
 const styles = StyleSheet.create({
   container: {
     
     backgroundColor: BACKGROUND_COLOR,
   },
-  // Contenedor interno para aplicar el padding y asegurar el área segura
+ 
   contentContainer: {
-    paddingTop: 50, // Espacio superior (para el notch)
-    paddingHorizontal: 25, // Espacio lateral
-    paddingBottom: 25, // Espacio inferior por si el contenido es corto
+    paddingTop: 50, 
+    paddingHorizontal: 25, 
+    paddingBottom: 25, 
   },
   title: {
     fontSize: 24,
-    fontWeight: "800", // Más grueso
+    fontWeight: "800", 
     textAlign: "center",
     marginBottom: 20,
-    color: '#333', // Color de texto oscuro
+    color: '#333', 
   },
-  // --- Caja de Resultado ---
+
   resultBox: {
-    backgroundColor: '#E8F5E9', // Fondo verde claro para el resultado
+    backgroundColor: '#E8F5E9', 
     borderRadius: 8,
     padding: 15,
     minHeight: 60,
     marginBottom: 15,
-    borderLeftWidth: 5, // Borde izquierdo para destacar
+    borderLeftWidth: 5, 
     borderColor: SECONDARY_COLOR,
     justifyContent: 'center',
     shadowColor: "#000",
@@ -340,7 +329,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 18,
   },
-  // --- Input ---
+
   input: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
@@ -350,20 +339,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontSize: 16,
     color: '#333',
-    // Sombra sutil
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 1,
     elevation: 1,
   },
-  // --- Botones ---
+  
   button: {
     padding: 14,
     alignItems: "center",
     marginBottom: 10,
     borderRadius: 8,
-    // Estilos base para todos los botones
+   
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -379,15 +367,15 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_COLOR,
   },
   resetButton: {
-    backgroundColor: ACCENT_COLOR, // Naranja para resetear (acción importante)
+    backgroundColor: ACCENT_COLOR, 
   },
   toggleButton: {
-    backgroundColor: '#00BFA5', // Teal vibrante para gráficas
+    backgroundColor: '#00BFA5', 
   },
   procedureButton: {
-    backgroundColor: '#7B1FA2', // Púrpura oscuro para procedimiento
+    backgroundColor: '#7B1FA2', 
   },
-  // --- Secciones (Tabla/Gráfica/Procedimiento) ---
+ 
   sectionContainer: {
     marginTop: 20,
     padding: 10,
@@ -406,7 +394,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EEE',
     paddingBottom: 5,
   },
-  // --- Tabla de valores ---
+ 
   tableList: {
     maxHeight: 180,
     marginBottom: 10,
@@ -422,29 +410,29 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   tableRowEven: {
-    backgroundColor: '#F5F5F5', // Gris claro para filas pares
+    backgroundColor: '#F5F5F5', 
   },
   tableRowOdd: {
-    backgroundColor: '#FFF', // Blanco para filas impares
+    backgroundColor: '#FFF', 
   },
   tableText: {
     fontSize: 14,
     color: '#333',
-    fontFamily: 'monospace', // Usar una fuente que se vea "matemática" si la plataforma lo permite
+    fontFamily: 'monospace', 
   },
-  // --- Gráfica ---
+
   chart: {
     marginVertical: 10,
-    borderRadius: 10, // Bordes redondeados para la gráfica
-    overflow: 'hidden', // Asegura que los bordes redondeados se apliquen al área del gráfico
+    borderRadius: 10, 
+    overflow: 'hidden', 
   },
-  // --- Procedimiento ---
+  
   procedureBox: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#FFFDE7', // Fondo ligeramente amarillento (como un cuaderno)
+    backgroundColor: '#FFFDE7', 
     borderWidth: 1,
-    borderColor: '#FFECB3', // Borde naranja claro
+    borderColor: '#FFECB3', 
     borderRadius: 10,
   },
   procedureStep: {
