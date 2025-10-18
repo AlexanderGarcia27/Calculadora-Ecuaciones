@@ -212,7 +212,7 @@ export default function App() {
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>
-            {showProcedure ? "OCULTAR PROCEDIMIENTO " : "VER PROCEDIMIENTO 🧠"}
+            {showProcedure ? "OCULTAR PROCEDIMIENTO " : "VER PROCEDIMIENTO"}
           </Text>
         </TouchableOpacity>
       )}
@@ -227,8 +227,8 @@ export default function App() {
                 key={item.x.toString()} 
                 style={[styles.tableRow, index % 2 === 0 ? styles.tableRowEven : styles.tableRowOdd]}
               >
-                <Text style={styles.tableText}>$x = {item.x}$</Text>
-                <Text style={styles.tableText}>$y = {item.y}$</Text>
+                <Text style={styles.tableText}>x = {item.x}</Text>
+                <Text style={styles.tableText}>y = {item.y}</Text>
               </View>
             ))}
           </View>
@@ -264,7 +264,7 @@ export default function App() {
       {/* Procedimiento paso a paso */}
       {showProcedure && (
         <View style={styles.procedureBox}>
-          <Text style={styles.sectionTitle}>Pasos de la Solución 🪜</Text>
+          <Text style={styles.sectionTitle}>Pasos de la Solución </Text>
           {procedureSteps.map((step, idx) => (
             <Text key={idx} style={styles.procedureStep}>{idx + 1}. {step}</Text>
           ))}
