@@ -90,7 +90,6 @@ export default function App() {
       return;
     }
 
-    // Extraer coeficientes a, b, c de ax² + bx + c = 0
     const coefficients = extractQuadraticCoefficients(equation);
     if (!coefficients) {
       Alert.alert("Error", "No se pudieron extraer los coeficientes de la ecuación.");
@@ -99,30 +98,25 @@ export default function App() {
 
     const { a, b, c } = coefficients;
     
-    // Calcular discriminante
     const discriminant = b * b - 4 * a * c;
     
     let solutions: string[] = [];
     let tabla: TableItem[] = [];
     
     if (discriminant > 0) {
-      // Dos soluciones reales
       const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
       const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
       solutions = [x1.toFixed(2), x2.toFixed(2)];
       setSolution(`x₁ = ${x1.toFixed(2)}, x₂ = ${x2.toFixed(2)}`);
     } else if (discriminant === 0) {
-      // Una solución real
       const x = -b / (2 * a);
       solutions = [x.toFixed(2)];
       setSolution(`x = ${x.toFixed(2)}`);
     } else {
-      // Sin soluciones reales
       Alert.alert("Aviso", "Esta ecuación cuadrática no tiene soluciones reales.");
       return;
     }
 
-    // Crear tabla de valores para la parábola con menor densidad
     for (let i = -10; i <= 10; i += 1) {
       const y = (a * i * i + b * i + c).toFixed(2);
       tabla.push({ x: i, y });
@@ -181,7 +175,6 @@ export default function App() {
     const left = parts[0];
     const right = parts[1];
     if (right !== "0") return false;
-    // Validar formato ax² + bx + c = 0
     const quadraticPattern = /^[-+]?\d*\.?\d*x²([+-]\d*\.?\d*x)?([+-]\d*\.?\d+)?$/i;
     return quadraticPattern.test(left);
   };
@@ -191,7 +184,6 @@ export default function App() {
       const normalized = eq.replace(/\s+/g, "");
       const left = normalized.split("=")[0];
       
-      // Patrones para extraer coeficientes
       const aMatch = left.match(/([-+]?\d*\.?\d*)x²/i);
       const bMatch = left.match(/([+-]\d*\.?\d*)x(?!²)/i);
       const cMatch = left.match(/([+-]\d*\.?\d+)(?!x)/);
@@ -242,57 +234,87 @@ export default function App() {
     setIsSecondDegree(false);
   };
 
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <Text style={styles.title}>Resolver Ecuaciones Lineales</Text>
+ 
+  const CLR_LIGHT_PRIMARY = '#00BCD4';
+  const CLR_LIGHT_ACCENT = '#FF9800';
+  const CLR_LIGHT_TOGGLE = '#00BFA5';
+  const CLR_LIGHT_PROCEDURE = '#7B1FA2';
 
-      {/* Switch para alternar tipo de ecuación */}
-      <View style={styles.switchContainer}>
-        <Text style={styles.switchLabel}>Tipo de Ecuación:</Text>
+  const CLR_DARK_GRAY_1 = '#8a7d7dff'; 
+  const CLR_DARK_GRAY_2 = '#b6b3b3ff'; 
+  
+  const CLR_PRIMARY = isSecondDegree ? CLR_DARK_GRAY_1 : CLR_LIGHT_PRIMARY; 
+  const CLR_ACCENT = isSecondDegree ? CLR_DARK_GRAY_2 : CLR_LIGHT_ACCENT; 
+  const CLR_TOGGLE = isSecondDegree ? CLR_DARK_GRAY_1 : CLR_LIGHT_TOGGLE;
+  const CLR_PROCEDURE = isSecondDegree ? CLR_DARK_GRAY_2 : CLR_LIGHT_PROCEDURE;
+  
+
+  const CLR_SECONDARY = isSecondDegree ? '#03DAC6' : '#4CAF50';
+  const CLR_BACKGROUND = isSecondDegree ? '#121212' : '#E0F7FA';
+  const CLR_SURFACE = isSecondDegree ? '#1E1E1E' : '#FFF';
+  const CLR_ON_SURFACE = isSecondDegree ? '#FFFFFF' : '#333';
+  const CLR_BORDER = isSecondDegree ? '#3C3C3C' : '#E0E0E0';
+  const CLR_PLACEHOLDER = isSecondDegree ? '#A8A8A8' : '#888';
+  const CLR_RESULT_BOX = isSecondDegree ? '#2A2A2A' : '#E8F5E9';
+  const CLR_RESULT_BORDER = isSecondDegree ? CLR_SECONDARY : CLR_SECONDARY;
+  const CLR_SHADOW = isSecondDegree ? '#000' : '#000';
+
+ 
+  return (
+    <ScrollView 
+        style={[styles.container, { backgroundColor: CLR_BACKGROUND }]} 
+        contentContainerStyle={styles.contentContainer}
+    >
+      <Text style={[styles.title, { color: CLR_ON_SURFACE }]}>
+        Resolver Ecuaciones Lineales
+      </Text>
+
+      <View style={[styles.switchContainer, { backgroundColor: CLR_SURFACE, borderColor: CLR_BORDER }]}>
+        <Text style={[styles.switchLabel, { color: CLR_ON_SURFACE }]}>Tipo de Ecuación:</Text>
         <View style={styles.switchRow}>
-          <Text style={[styles.switchText, !isSecondDegree && styles.switchTextActive]}>
+          <Text style={[styles.switchText, { color: CLR_PLACEHOLDER }, !isSecondDegree && styles.switchTextActive]}>
             Primer Grado (ax + b = c)
           </Text>
           <Switch
             value={isSecondDegree}
             onValueChange={setIsSecondDegree}
-            trackColor={{ false: '#81c784', true: '#ff9800' }}
+            trackColor={{ false: CLR_LIGHT_PRIMARY, true: CLR_DARK_GRAY_1 }}
             thumbColor={isSecondDegree ? '#fff' : '#fff'}
           />
-          <Text style={[styles.switchText, isSecondDegree && styles.switchTextActive]}>
+          <Text style={[styles.switchText, { color: CLR_PLACEHOLDER }, isSecondDegree && styles.switchTextActive]}>
             Segundo Grado (ax² + bx + c = 0)
           </Text>
         </View>
       </View>
 
-      <View style={styles.resultBox}>
+      <View style={[styles.resultBox, { backgroundColor: CLR_RESULT_BOX, borderColor: CLR_RESULT_BORDER, shadowColor: CLR_SHADOW }]}>
         {solution ? (
-          <Text style={styles.resultTextSolved}>
-            Resultado: <Text style={styles.solutionValue}>x = {solution}</Text>
+          <Text style={[styles.resultTextSolved, { color: CLR_ON_SURFACE }]}>
+            Resultado: <Text style={[styles.solutionValue, { color: CLR_SECONDARY }]}>x = {solution}</Text>
           </Text>
         ) : (
-          <Text style={styles.resultTextPlaceholder}>Aquí aparecerá el resultado...</Text>
+          <Text style={[styles.resultTextPlaceholder, { color: CLR_PLACEHOLDER }]}>Aquí aparecerá el resultado...</Text>
         )}
       </View>
 
       <TextInput
         placeholder={isSecondDegree ? "Ejemplo: x² + 2x - 3 = 0" : "Ejemplo: 2x + 4 = 10"}
-        placeholderTextColor="#888"
+        placeholderTextColor={CLR_PLACEHOLDER}
         value={equation}
         onChangeText={setEquation}
-        style={styles.input}
+        style={[styles.input, { borderColor: CLR_BORDER, backgroundColor: CLR_SURFACE, color: CLR_ON_SURFACE }]}
       />
 
-      <TouchableOpacity onPress={solveEquation} style={[styles.button, styles.solveButton]} activeOpacity={0.8}>
+      <TouchableOpacity onPress={solveEquation} style={[styles.button, { backgroundColor: CLR_PRIMARY }]} activeOpacity={0.8}>
         <Text style={styles.buttonText}>CALCULAR SOLUCIÓN</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={resetAll} style={[styles.button, styles.resetButton]} activeOpacity={0.8}>
+      <TouchableOpacity onPress={resetAll} style={[styles.button, { backgroundColor: CLR_ACCENT }]} activeOpacity={0.8}>
         <Text style={styles.buttonText}>REESTABLECER</Text>
       </TouchableOpacity>
 
       {solution && (
-        <TouchableOpacity onPress={() => setShowTable(!showTable)} style={[styles.button, styles.toggleButton]} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => setShowTable(!showTable)} style={[styles.button, { backgroundColor: CLR_TOGGLE }]} activeOpacity={0.8}>
           <Text style={styles.buttonText}>
             {showTable ? "OCULTAR GRÁFICA Y TABLA" : "VER GRÁFICA Y TABLA"}
           </Text>
@@ -300,7 +322,7 @@ export default function App() {
       )}
 
       {solution && (
-        <TouchableOpacity onPress={() => setShowProcedure(!showProcedure)} style={[styles.button, styles.procedureButton]} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => setShowProcedure(!showProcedure)} style={[styles.button, { backgroundColor: CLR_PROCEDURE }]} activeOpacity={0.8}>
           <Text style={styles.buttonText}>
             {showProcedure ? "OCULTAR PROCEDIMIENTO" : "VER PROCEDIMIENTO"}
           </Text>
@@ -308,30 +330,37 @@ export default function App() {
       )}
 
       {showTable && (
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Tabla de Valores</Text>
-          <View style={styles.tableList}>
+        <View style={[styles.sectionContainer, { backgroundColor: CLR_SURFACE, borderColor: CLR_BORDER }]}>
+          <Text style={[styles.sectionTitle, { color: CLR_ON_SURFACE, borderBottomColor: CLR_BORDER }]}>
+            Tabla de Valores
+          </Text>
+          <View style={[styles.tableList, { borderColor: CLR_BORDER }]}>
             {tableData.filter((item, index) => 
               isSecondDegree ? index % 2 === 0 : true
             ).map((item, index) => (
               <View
                 key={item.x.toString()}
-                style={[styles.tableRow, index % 2 === 0 ? styles.tableRowEven : styles.tableRowOdd]}
+                style={[
+                  styles.tableRow,
+                  index % 2 === 0 ? [styles.tableRowEven, { backgroundColor: isSecondDegree ? '#2A2A2A' : '#F5F5F5' }] : [styles.tableRowOdd, { backgroundColor: CLR_SURFACE }],
+                ]}
               >
-                <Text style={styles.tableText}>x = {item.x}</Text>
-                <Text style={styles.tableText}>y = {item.y}</Text>
+                <Text style={[styles.tableText, { color: CLR_ON_SURFACE }]}>x = {item.x}</Text>
+                <Text style={[styles.tableText, { color: CLR_ON_SURFACE }]}>y = {item.y}</Text>
               </View>
             ))}
           </View>
 
-          <Text style={styles.sectionTitle}>Gráfica en Plano Cartesiano</Text>
+          <Text style={[styles.sectionTitle, { color: CLR_ON_SURFACE, borderBottomColor: CLR_BORDER }]}>
+            Gráfica en Plano Cartesiano
+          </Text>
            <View style={{ alignItems: 'center' }}>
              <LineChart
                data={{
                  labels: tableData.map((d) => d.x.toString()),
                  datasets: [
                    { data: tableData.map((d) => parseFloat(d.y)) },
-                   { data: Array(tableData.length).fill(0), color: () => "#000" }, // Eje X
+                   { data: Array(tableData.length).fill(0), color: () => isSecondDegree ? '#FFFFFF' : "#000" },
                  ],
                }}
                width={screenWidth - 40}
@@ -339,15 +368,15 @@ export default function App() {
                yAxisSuffix=""
                yAxisInterval={isSecondDegree ? 20 : 1}
                chartConfig={{
-                 backgroundGradientFrom: "#FFFFFF",
-                 backgroundGradientTo: "#FFFFFF",
+                 backgroundGradientFrom: CLR_SURFACE,
+                 backgroundGradientTo: CLR_SURFACE,
                  decimalPlaces: 1,
-                 color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                 color: (opacity = 1) => `rgba(132, 255, 230, ${opacity})`,
+                 labelColor: (opacity = 1) => `rgba(${isSecondDegree ? '255, 255, 255' : '0, 0, 0'}, ${opacity})`,
                  propsForDots: {
                    r: "3",
                    strokeWidth: "2",
-                   stroke: "#FF5722"
+                   stroke: CLR_ACCENT
                  },
                }}
                bezier={false}
@@ -358,14 +387,13 @@ export default function App() {
              />
 
 
-            {/* Ejes X y Y simulados */}
             <View
               style={{
                 position: 'absolute',
                 top: 130,
                 width: screenWidth - 40,
                 height: 2,
-                backgroundColor: '#000',
+                backgroundColor: isSecondDegree ? '#FFF' : '#000',
               }}
             />
             <View
@@ -375,26 +403,27 @@ export default function App() {
                 top: 0,
                 bottom: 0,
                 width: 2,
-                backgroundColor: '#000',
+                backgroundColor: isSecondDegree ? '#FFF' : '#000',
               }}
             />
-            {/* Explicación simbólica */}
-            <View style={styles.symbolizationBox}>
-              <Text style={styles.sectionTitle}>Simbolización de la Gráfica</Text>
-              <Text style={styles.symbolText}>• Eje X (horizontal): representa los valores de x.</Text>
+            <View style={[styles.symbolizationBox, { backgroundColor: isSecondDegree ? '#2A2A2A' : '#FFF3E0', borderColor: isSecondDegree ? '#4F4F4F' : '#FFB74D' }]}>
+              <Text style={[styles.sectionTitle, { color: CLR_ON_SURFACE, borderBottomColor: CLR_BORDER }]}>
+                Simbolización de la Gráfica
+              </Text>
+              <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Eje X (horizontal): representa los valores de x.</Text>
               {isSecondDegree ? (
                 <>
-                  <Text style={styles.symbolText}>• Eje Y (vertical): representa los valores de y = f(x) = ax² + bx + c.</Text>
-                  <Text style={styles.symbolText}>• Línea azul: la parábola de la ecuación cuadrática.</Text>
-                  <Text style={styles.symbolText}>• Cruce con el eje X: soluciones de la ecuación (x donde y = 0).</Text>
-                  <Text style={styles.symbolText}>• Puntos: valores calculados para ver la forma de la parábola.</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Eje Y (vertical): representa los valores de y = f(x) = ax² + bx + c.</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Línea turquesa: la parábola de la ecuación cuadrática.</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Cruce con el eje X: soluciones de la ecuación (x donde y = 0).</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Puntos: valores calculados para ver la forma de la parábola.</Text>
                 </>
               ) : (
                 <>
-                  <Text style={styles.symbolText}>• Eje Y (vertical): representa los valores de y = f(x) = ax + b.</Text>
-                  <Text style={styles.symbolText}>• Línea azul: la recta de la ecuación lineal.</Text>
-                  <Text style={styles.symbolText}>• Cruce con el eje X: solución de la ecuación (x donde y = 0).</Text>
-                  <Text style={styles.symbolText}>• Puntos: valores calculados para ver la pendiente de la recta.</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Eje Y (vertical): representa los valores de y = f(x) = ax + b.</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Línea azul: la recta de la ecuación lineal.</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Cruce con el eje X: solución de la ecuación (x donde y = 0).</Text>
+                  <Text style={[styles.symbolText, { color: CLR_ON_SURFACE }]}>• Puntos: valores calculados para ver la pendiente de la recta.</Text>
                 </>
               )}
             </View>
@@ -403,10 +432,12 @@ export default function App() {
       )}
 
       {showProcedure && (
-        <View style={styles.procedureBox}>
-          <Text style={styles.sectionTitle}>Pasos de la Solución</Text>
+        <View style={[styles.procedureBox, { backgroundColor: isSecondDegree ? '#2A2A2A' : '#FFFDE7', borderColor: isSecondDegree ? '#4F4F4F' : '#FFECB3' }]}>
+          <Text style={[styles.sectionTitle, { color: CLR_ON_SURFACE, borderBottomColor: CLR_BORDER }]}>
+            Pasos de la Solución
+          </Text>
           {procedureSteps.map((step, idx) => (
-            <Text key={idx} style={styles.procedureStep}>{idx + 1}. {step}</Text>
+            <Text key={idx} style={[styles.procedureStep, { color: CLR_ON_SURFACE }]}>{idx + 1}. {step}</Text>
           ))}
         </View>
       )}
@@ -416,15 +447,8 @@ export default function App() {
   );
 }
 
-const PRIMARY_COLOR = '#00BCD4';
-const SECONDARY_COLOR = '#4CAF50';
-const ACCENT_COLOR = '#FF9800';
-const BACKGROUND_COLOR = '#E0F7FA';
-
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: BACKGROUND_COLOR,
-  },
+  container: {},
   contentContainer: {
     paddingTop: 50,
     paddingHorizontal: 25,
@@ -435,46 +459,36 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     textAlign: "center",
     marginBottom: 20,
-    color: '#333',
   },
   resultBox: {
-    backgroundColor: '#E8F5E9',
     borderRadius: 8,
     padding: 15,
     minHeight: 60,
     marginBottom: 15,
     borderLeftWidth: 5,
-    borderColor: SECONDARY_COLOR,
     justifyContent: 'center',
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
   },
   resultTextPlaceholder: {
-    color: '#666',
     fontSize: 16,
   },
   resultTextSolved: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#333',
   },
   solutionValue: {
-    color: SECONDARY_COLOR,
     fontWeight: '900',
     fontSize: 18,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    backgroundColor: '#FFF',
     padding: 15,
     marginBottom: 15,
     borderRadius: 8,
     fontSize: 16,
-    color: '#333',
   },
   button: {
     padding: 14,
@@ -492,26 +506,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
   },
-  solveButton: { backgroundColor: PRIMARY_COLOR },
-  resetButton: { backgroundColor: ACCENT_COLOR },
-  toggleButton: { backgroundColor: '#00BFA5' },
-  procedureButton: { backgroundColor: '#7B1FA2' },
   sectionContainer: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#FFF',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 10,
-    color: '#333',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEE',
     paddingBottom: 5,
+    borderBottomWidth: 1,
   },
   tableList: {
     maxHeight: 180,
@@ -519,7 +525,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
   tableRow: {
     flexDirection: "row",
@@ -527,11 +532,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
   },
-  tableRowEven: { backgroundColor: '#F5F5F5' },
-  tableRowOdd: { backgroundColor: '#FFF' },
+  tableRowEven: { 
+  },
+  tableRowOdd: { 
+  },
   tableText: {
     fontSize: 14,
-    color: '#333',
     fontFamily: 'monospace',
   },
   chart: {
@@ -542,43 +548,34 @@ const styles = StyleSheet.create({
   procedureBox: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#FFFDE7',
     borderWidth: 1,
-    borderColor: '#FFECB3',
     borderRadius: 10,
   },
   procedureStep: {
     marginBottom: 6,
     fontSize: 15,
     lineHeight: 22,
-    color: '#444',
   },
   symbolizationBox: {
     marginTop: 15,
     padding: 10,
-    backgroundColor: '#FFF3E0',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FFB74D',
   },
   symbolText: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#333',
     marginBottom: 4,
   },
   switchContainer: {
     marginBottom: 20,
     padding: 15,
-    backgroundColor: '#F5F5F5',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
   switchLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -589,13 +586,11 @@ const styles = StyleSheet.create({
   },
   switchText: {
     fontSize: 12,
-    color: '#666',
     flex: 1,
     textAlign: 'center',
   },
   switchTextActive: {
-    color: '#2196F3',
+    color: '#00BCD4',
     fontWeight: '600',
   }
-  
 });
