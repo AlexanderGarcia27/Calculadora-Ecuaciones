@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -231,8 +231,11 @@ export default function App() {
     setShowTable(false);
     setShowProcedure(false);
     setProcedureSteps([]);
-    setIsSecondDegree(false);
   };
+
+  useEffect(() => {
+    resetAll();
+  }, [isSecondDegree]);
 
  
   const CLR_LIGHT_PRIMARY = '#00BCD4';
