@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -28,6 +28,53 @@ export default function App() {
   const [showProcedure, setShowProcedure] = useState<boolean>(false);
   const [procedureSteps, setProcedureSteps] = useState<string[]>([]);
   const [isSecondDegree, setIsSecondDegree] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
+  const [selection, setSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const inputRef = useRef<TextInput>(null);
+
+  const insertText = (text: string): void => {
+    const start = selection.start;
+    const end = selection.end;
+    const newText = equation.substring(0, start) + text + equation.substring(end);
+    setEquation(newText);
+    const newCursorPosition = start + text.length;
+    setSelection({ start: newCursorPosition, end: newCursorPosition });
+    // Actualizar el cursor del input
+    setTimeout(() => {
+      inputRef.current?.setNativeProps({ selection: { start: newCursorPosition, end: newCursorPosition } });
+    }, 0);
+  };
+
+  const deleteText = (): void => {
+    if (selection.start === selection.end && selection.start > 0) {
+      // Borrar un carácter antes del cursor
+      const newText = equation.substring(0, selection.start - 1) + equation.substring(selection.start);
+      setEquation(newText);
+      const newCursorPosition = selection.start - 1;
+      setSelection({ start: newCursorPosition, end: newCursorPosition });
+      setTimeout(() => {
+        inputRef.current?.setNativeProps({ selection: { start: newCursorPosition, end: newCursorPosition } });
+      }, 0);
+    } else if (selection.start !== selection.end) {
+      // Borrar la selección
+      const newText = equation.substring(0, selection.start) + equation.substring(selection.end);
+      setEquation(newText);
+      setSelection({ start: selection.start, end: selection.start });
+      setTimeout(() => {
+        inputRef.current?.setNativeProps({ selection: { start: selection.start, end: selection.start } });
+      }, 0);
+    }
+  };
+
+  const moveCursor = (direction: 'left' | 'right'): void => {
+    const newPosition = direction === 'left' 
+      ? Math.max(0, selection.start - 1)
+      : Math.min(equation.length, selection.start + 1);
+    setSelection({ start: newPosition, end: newPosition });
+    setTimeout(() => {
+      inputRef.current?.setNativeProps({ selection: { start: newPosition, end: newPosition } });
+    }, 0);
+  };
 
   const solveEquation = (): void => {
     try {
@@ -84,48 +131,72 @@ export default function App() {
   };
 
   const solveQuadraticEquation = (): void => {
-    const isValid = validateQuadraticEquation(equation);
-    if (!isValid) {
-      Alert.alert("Error", "Solo se permiten ecuaciones cuadráticas en la forma ax² + bx + c = 0 (por ejemplo: x² + 2x - 3 = 0)");
-      return;
-    }
+  const isValid = validateQuadraticEquation(equation);
+  if (!isValid) {
+    Alert.alert(
+      "Error",
+      "Solo se permiten ecuaciones cuadráticas en la forma ax² + bx + c = d (por ejemplo: x² + 2x - 3 = 0 o x² + 2x - 3 = 5)"
+    );
+    return;
+  }
 
-    const coefficients = extractQuadraticCoefficients(equation);
-    if (!coefficients) {
-      Alert.alert("Error", "No se pudieron extraer los coeficientes de la ecuación.");
-      return;
-    }
+  const coefficients = extractQuadraticCoefficients(equation);
+  if (!coefficients) {
+    Alert.alert("Error", "No se pudieron extraer los coeficientes de la ecuación.");
+    return;
+  }
 
-    const { a, b, c } = coefficients;
-    
-    const discriminant = b * b - 4 * a * c;
-    
-    let solutions: string[] = [];
-    let tabla: TableItem[] = [];
-    
-    if (discriminant > 0) {
-      const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
-      const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
-      solutions = [x1.toFixed(2), x2.toFixed(2)];
-      setSolution(`x₁ = ${x1.toFixed(2)}, x₂ = ${x2.toFixed(2)}`);
-    } else if (discriminant === 0) {
-      const x = -b / (2 * a);
-      solutions = [x.toFixed(2)];
-      setSolution(`x = ${x.toFixed(2)}`);
-    } else {
-      Alert.alert("Aviso", "Esta ecuación cuadrática no tiene soluciones reales.");
-      return;
-    }
+  const { a, b, c, originalRight } = coefficients;
+  const discriminant = b * b - 4 * a * c;
 
-    for (let i = -10; i <= 10; i += 1) {
-      const y = (a * i * i + b * i + c).toFixed(2);
-      tabla.push({ x: i, y });
-    }
+  let solutions: string[] = [];
+  let tabla: TableItem[] = [];
 
-    setTableData(tabla);
-    const proc = generateQuadraticProcedure(coefficients, discriminant);
-    setProcedureSteps(proc);
-  };
+  // 🔹 Caso 1: dos soluciones reales
+  if (discriminant > 0) {
+    const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+    const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+    solutions = [x1.toFixed(2), x2.toFixed(2)];
+    setSolution(`x₁ = ${x1.toFixed(2)}, x₂ = ${x2.toFixed(2)}`);
+
+  // 🔹 Caso 2: una solución real doble
+  } else if (discriminant === 0) {
+    const x = -b / (2 * a);
+    solutions = [x.toFixed(2)];
+    setSolution(`x = ${x.toFixed(2)}`);
+
+  // 🔹 Caso 3: soluciones complejas (discriminante < 0)
+  } else {
+    const realPart = (-b / (2 * a)).toFixed(2);
+    const imaginaryPart = (Math.sqrt(-discriminant) / (2 * a)).toFixed(2);
+    setSolution(`x₁ = ${realPart} + ${imaginaryPart}i, x₂ = ${realPart} - ${imaginaryPart}i`);
+    solutions = [`${realPart}+${imaginaryPart}i`, `${realPart}-${imaginaryPart}i`];
+  }
+
+  // 🔹 Generar tabla de valores reales para la gráfica (usar la ecuación original)
+  // Para la gráfica, usamos y = ax² + bx + cOriginal donde cOriginal = c + originalRight
+  const cOriginal = c + originalRight;
+  for (let i = -10; i <= 10; i += 1) {
+    const y = (a * i * i + b * i + cOriginal).toFixed(2);
+    tabla.push({ x: i, y });
+  }
+
+  setTableData(tabla);
+
+  // 🔹 Procedimiento paso a paso
+  const proc = generateQuadraticProcedure(coefficients, discriminant, originalRight);
+  // Si no hay soluciones reales, agregar pasos complejos al procedimiento
+  if (discriminant < 0) {
+    proc.push(`Δ < 0: La ecuación no tiene raíces reales.`);
+    const realPart = (-b / (2 * a)).toFixed(2);
+    const imaginaryPart = (Math.sqrt(-discriminant) / (2 * a)).toFixed(2);
+    proc.push(`Soluciones complejas:`);
+    proc.push(`x₁ = ${realPart} + ${imaginaryPart}i`);
+    proc.push(`x₂ = ${realPart} - ${imaginaryPart}i`);
+  }
+  setProcedureSteps(proc);
+};
+
 
   const normalizeEquation = (eq: string): string => eq.replace(/\s+/g, "");
 
@@ -174,15 +245,18 @@ export default function App() {
     if (parts.length !== 2) return false;
     const left = parts[0];
     const right = parts[1];
-    if (right !== "0") return false;
+    // Aceptar cualquier número en el lado derecho
+    if (!/^[-+]?\d*\.?\d+$/.test(right)) return false;
     const quadraticPattern = /^[-+]?\d*\.?\d*x²([+-]\d*\.?\d*x)?([+-]\d*\.?\d+)?$/i;
     return quadraticPattern.test(left);
   };
 
-  const extractQuadraticCoefficients = (eq: string): { a: number, b: number, c: number } | null => {
+  const extractQuadraticCoefficients = (eq: string): { a: number, b: number, c: number, originalRight: number } | null => {
     try {
       const normalized = eq.replace(/\s+/g, "");
-      const left = normalized.split("=")[0];
+      const parts = normalized.split("=");
+      const left = parts[0];
+      const right = parts[1] || "0";
       
       const aMatch = left.match(/([-+]?\d*\.?\d*)x²/i);
       const bMatch = left.match(/([+-]\d*\.?\d*)x(?!²)/i);
@@ -190,19 +264,63 @@ export default function App() {
       
       const a = aMatch ? parseFloat(aMatch[1] || "1") : 0;
       const b = bMatch ? parseFloat(bMatch[1]) : 0;
-      const c = cMatch ? parseFloat(cMatch[1]) : 0;
+      const cLeft = cMatch ? parseFloat(cMatch[1]) : 0;
+      const rightValue = parseFloat(right);
       
-      return { a, b, c };
+      // Convertir a forma estándar: restar el lado derecho del término constante
+      const c = cLeft - rightValue;
+      
+      return { a, b, c, originalRight: rightValue };
     } catch {
       return null;
     }
   };
 
-  const generateQuadraticProcedure = (coefficients: { a: number, b: number, c: number }, discriminant: number): string[] => {
+  const generateQuadraticProcedure = (coefficients: { a: number, b: number, c: number }, discriminant: number, originalRight: number): string[] => {
     const { a, b, c } = coefficients;
     const steps: string[] = [];
     
-    steps.push(`Ecuación inicial: ${a}x² + ${b}x + ${c} = 0`);
+    // Mostrar la ecuación original
+    const cOriginal = c + originalRight;
+    
+    // Formatear el término ax²
+    let aTerm = '';
+    if (a === 1) aTerm = 'x²';
+    else if (a === -1) aTerm = '-x²';
+    else aTerm = `${a}x²`;
+    
+    // Formatear el término bx
+    let bTerm = '';
+    if (b !== 0) {
+      const bSign = b >= 0 ? '+' : '-';
+      const bAbs = Math.abs(b);
+      if (bAbs === 1) bTerm = ` ${bSign} x`;
+      else bTerm = ` ${bSign} ${bAbs}x`;
+    }
+    
+    // Formatear el término constante
+    let cTerm = '';
+    if (cOriginal !== 0) {
+      const cSign = cOriginal >= 0 ? '+' : '-';
+      const cAbs = Math.abs(cOriginal);
+      cTerm = ` ${cSign} ${cAbs}`;
+    }
+    
+    steps.push(`Ecuación inicial: ${aTerm}${bTerm}${cTerm} = ${originalRight}`);
+    
+    // Si el lado derecho no es 0, mostrar el paso de conversión
+    if (originalRight !== 0) {
+      // Formatear el término constante después de la conversión
+      let cTermConverted = '';
+      if (c !== 0) {
+        const cSign = c >= 0 ? '+' : '-';
+        const cAbs = Math.abs(c);
+        cTermConverted = ` ${cSign} ${cAbs}`;
+      }
+      
+      steps.push(`Restar ${originalRight} de ambos lados: ${aTerm}${bTerm}${cTermConverted} = 0`);
+    }
+    
     steps.push(`Coeficientes: a = ${a}, b = ${b}, c = ${c}`);
     steps.push(`Fórmula cuadrática: x = (-b ± √(b² - 4ac)) / 2a`);
     steps.push(`Discriminante: Δ = b² - 4ac = ${b}² - 4(${a})(${c}) = ${discriminant}`);
@@ -231,6 +349,8 @@ export default function App() {
     setShowTable(false);
     setShowProcedure(false);
     setProcedureSteps([]);
+    setShowKeyboard(false);
+    setSelection({ start: 0, end: 0 });
   };
 
   useEffect(() => {
@@ -285,7 +405,7 @@ export default function App() {
             thumbColor={isSecondDegree ? '#fff' : '#fff'}
           />
           <Text style={[styles.switchText, { color: CLR_PLACEHOLDER }, isSecondDegree && styles.switchTextActive]}>
-            Segundo Grado (ax² + bx + c = 0)
+            Segundo Grado (ax² + bx + c = d)
           </Text>
         </View>
       </View>
@@ -301,12 +421,111 @@ export default function App() {
       </View>
 
       <TextInput
-        placeholder={isSecondDegree ? "Ejemplo: x² + 2x - 3 = 0" : "Ejemplo: 2x + 4 = 10"}
+        ref={inputRef}
+        placeholder={isSecondDegree ? "Ejemplo: x² + 2x - 3 = 5" : "Ejemplo: 2x + 4 = 10"}
         placeholderTextColor={CLR_PLACEHOLDER}
         value={equation}
         onChangeText={setEquation}
+        onSelectionChange={(e) => {
+          setSelection({
+            start: e.nativeEvent.selection.start,
+            end: e.nativeEvent.selection.end,
+          });
+        }}
+        selection={selection}
         style={[styles.input, { borderColor: CLR_BORDER, backgroundColor: CLR_SURFACE, color: CLR_ON_SURFACE }]}
       />
+
+      <TouchableOpacity 
+        onPress={() => setShowKeyboard(!showKeyboard)} 
+        style={[styles.button, { backgroundColor: CLR_TOGGLE }]} 
+        activeOpacity={0.8}
+      >
+        <Text style={styles.buttonText}>
+          {showKeyboard ? "OCULTAR TECLADO" : "MOSTRAR TECLADO"}
+        </Text>
+      </TouchableOpacity>
+
+      {showKeyboard && (
+        <View style={[styles.keyboardContainer, { backgroundColor: CLR_SURFACE, borderColor: CLR_BORDER }]}>
+          {/* Primera fila: Números 1-3 */}
+          <View style={styles.keyboardRow}>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("1")}>
+              <Text style={styles.keyButtonText}>1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("2")}>
+              <Text style={styles.keyButtonText}>2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("3")}>
+              <Text style={styles.keyButtonText}>3</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_SECONDARY }]} onPress={() => insertText("x")}>
+              <Text style={styles.keyButtonText}>x</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Segunda fila: Números 4-6 */}
+          <View style={styles.keyboardRow}>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("4")}>
+              <Text style={styles.keyButtonText}>4</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("5")}>
+              <Text style={styles.keyButtonText}>5</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("6")}>
+              <Text style={styles.keyButtonText}>6</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_SECONDARY }]} onPress={() => insertText("x²")}>
+              <Text style={styles.keyButtonText}>x²</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Tercera fila: Números 7-9 */}
+          <View style={styles.keyboardRow}>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("7")}>
+              <Text style={styles.keyButtonText}>7</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("8")}>
+              <Text style={styles.keyButtonText}>8</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("9")}>
+              <Text style={styles.keyButtonText}>9</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_ACCENT }]} onPress={() => insertText("+")}>
+              <Text style={styles.keyButtonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Cuarta fila: 0, operadores y controles */}
+          <View style={styles.keyboardRow}>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PRIMARY }]} onPress={() => insertText("0")}>
+              <Text style={styles.keyButtonText}>0</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_ACCENT }]} onPress={() => insertText("-")}>
+              <Text style={styles.keyButtonText}>-</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_ACCENT }]} onPress={() => insertText("=")}>
+              <Text style={styles.keyButtonText}>=</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButton, { backgroundColor: CLR_PROCEDURE }]} onPress={() => insertText(" ")}>
+              <Text style={styles.keyButtonText}>␣</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Quinta fila: Controles de cursor y borrar */}
+          <View style={styles.keyboardRow}>
+            <TouchableOpacity style={[styles.keyButtonWide, { backgroundColor: CLR_PROCEDURE }]} onPress={() => moveCursor("left")}>
+              <Text style={styles.keyButtonText}>←</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButtonWide, { backgroundColor: CLR_PROCEDURE }]} onPress={() => moveCursor("right")}>
+              <Text style={styles.keyButtonText}>→</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.keyButtonWide, { backgroundColor: CLR_ACCENT }]} onPress={deleteText}>
+              <Text style={styles.keyButtonText}>⌫</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       <TouchableOpacity onPress={solveEquation} style={[styles.button, { backgroundColor: CLR_PRIMARY }]} activeOpacity={0.8}>
         <Text style={styles.buttonText}>CALCULAR SOLUCIÓN</Text>
@@ -595,5 +814,48 @@ const styles = StyleSheet.create({
   switchTextActive: {
     color: '#00BCD4',
     fontWeight: '600',
+  },
+  keyboardContainer: {
+    marginTop: 10,
+    marginBottom: 15,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  keyboardRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  keyButton: {
+    flex: 1,
+    height: 50,
+    marginHorizontal: 3,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  keyButtonWide: {
+    flex: 2,
+    height: 50,
+    marginHorizontal: 3,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  keyButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '700',
   }
 });

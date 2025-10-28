@@ -21,10 +21,17 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.alexandegarcia27.CalculadoraEcuacionesLineales"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c8fb5a83-7b41-4fbd-88a3-882bbff94e9f"
+      }
+    },
+    "owner": "alexuni"
   }
 }
