@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Selection } from "../types";
 import { getThemeColors } from "../constants/colors";
+import { equationInputStyles } from "../styles/EquationInput.styles";
 
 interface EquationInputProps {
   equation: string;
@@ -107,7 +108,7 @@ export default function EquationInput({
         selection={selection}
         showSoftInputOnFocus={false}
         style={[
-          styles.input,
+          equationInputStyles.input,
           {
             borderColor: colors.CLR_BORDER,
             backgroundColor: colors.CLR_SURFACE,
@@ -118,10 +119,10 @@ export default function EquationInput({
 
       <TouchableOpacity
         onPress={() => setShowKeyboard(!showKeyboard)}
-        style={[styles.button, { backgroundColor: colors.CLR_TOGGLE }]}
+        style={[equationInputStyles.button, { backgroundColor: colors.CLR_TOGGLE }]}
         activeOpacity={0.8}
       >
-        <Text style={styles.buttonText}>
+        <Text style={equationInputStyles.buttonText}>
           {showKeyboard ? "OCULTAR TECLADO" : "MOSTRAR TECLADO"}
         </Text>
       </TouchableOpacity>
@@ -129,7 +130,7 @@ export default function EquationInput({
       {showKeyboard && (
         <View
           style={[
-            styles.keyboardContainer,
+            equationInputStyles.keyboardContainer,
             {
               backgroundColor: colors.CLR_SURFACE,
               borderColor: colors.CLR_BORDER,
@@ -137,136 +138,136 @@ export default function EquationInput({
           ]}
         >
           {/* Primera fila: Números 1-3 */}
-          <View style={styles.keyboardRow}>
+          <View style={equationInputStyles.keyboardRow}>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("1")}
             >
-              <Text style={styles.keyButtonText}>1</Text>
+              <Text style={equationInputStyles.keyButtonText}>1</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("2")}
             >
-              <Text style={styles.keyButtonText}>2</Text>
+              <Text style={equationInputStyles.keyButtonText}>2</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("3")}
             >
-              <Text style={styles.keyButtonText}>3</Text>
+              <Text style={equationInputStyles.keyButtonText}>3</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_SECONDARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_SECONDARY }]}
               onPress={() => insertText("x")}
             >
-              <Text style={styles.keyButtonText}>x</Text>
+              <Text style={equationInputStyles.keyButtonText}>x</Text>
             </TouchableOpacity>
           </View>
 
           {/* Segunda fila: Números 4-6 */}
-          <View style={styles.keyboardRow}>
+          <View style={equationInputStyles.keyboardRow}>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("4")}
             >
-              <Text style={styles.keyButtonText}>4</Text>
+              <Text style={equationInputStyles.keyButtonText}>4</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("5")}
             >
-              <Text style={styles.keyButtonText}>5</Text>
+              <Text style={equationInputStyles.keyButtonText}>5</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("6")}
             >
-              <Text style={styles.keyButtonText}>6</Text>
+              <Text style={equationInputStyles.keyButtonText}>6</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_SECONDARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_SECONDARY }]}
               onPress={() => insertText("x²")}
             >
-              <Text style={styles.keyButtonText}>x²</Text>
+              <Text style={equationInputStyles.keyButtonText}>x²</Text>
             </TouchableOpacity>
           </View>
 
           {/* Tercera fila: Números 7-9 */}
-          <View style={styles.keyboardRow}>
+          <View style={equationInputStyles.keyboardRow}>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("7")}
             >
-              <Text style={styles.keyButtonText}>7</Text>
+              <Text style={equationInputStyles.keyButtonText}>7</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("8")}
             >
-              <Text style={styles.keyButtonText}>8</Text>
+              <Text style={equationInputStyles.keyButtonText}>8</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("9")}
             >
-              <Text style={styles.keyButtonText}>9</Text>
+              <Text style={equationInputStyles.keyButtonText}>9</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_ACCENT }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_ACCENT }]}
               onPress={() => insertText("+")}
             >
-              <Text style={styles.keyButtonText}>+</Text>
+              <Text style={equationInputStyles.keyButtonText}>+</Text>
             </TouchableOpacity>
           </View>
 
           {/* Cuarta fila: 0, operadores y controles */}
-          <View style={styles.keyboardRow}>
+          <View style={equationInputStyles.keyboardRow}>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PRIMARY }]}
               onPress={() => insertText("0")}
             >
-              <Text style={styles.keyButtonText}>0</Text>
+              <Text style={equationInputStyles.keyButtonText}>0</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_ACCENT }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_ACCENT }]}
               onPress={() => insertText("-")}
             >
-              <Text style={styles.keyButtonText}>-</Text>
+              <Text style={equationInputStyles.keyButtonText}>-</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_ACCENT }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_ACCENT }]}
               onPress={() => insertText("=")}
             >
-              <Text style={styles.keyButtonText}>=</Text>
+              <Text style={equationInputStyles.keyButtonText}>=</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButton, { backgroundColor: colors.CLR_PROCEDURE }]}
+              style={[equationInputStyles.keyButton, { backgroundColor: colors.CLR_PROCEDURE }]}
               onPress={() => insertText(" ")}
             >
-              <Text style={styles.keyButtonText}>␣</Text>
+              <Text style={equationInputStyles.keyButtonText}>␣</Text>
             </TouchableOpacity>
           </View>
 
           {/* Quinta fila: Controles de cursor y borrar */}
-          <View style={styles.keyboardRow}>
+          <View style={equationInputStyles.keyboardRow}>
             <TouchableOpacity
-              style={[styles.keyButtonWide, { backgroundColor: colors.CLR_PROCEDURE }]}
+              style={[equationInputStyles.keyButtonWide, { backgroundColor: colors.CLR_PROCEDURE }]}
               onPress={() => moveCursor("left")}
             >
-              <Text style={styles.keyButtonText}>←</Text>
+              <Text style={equationInputStyles.keyButtonText}>←</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButtonWide, { backgroundColor: colors.CLR_PROCEDURE }]}
+              style={[equationInputStyles.keyButtonWide, { backgroundColor: colors.CLR_PROCEDURE }]}
               onPress={() => moveCursor("right")}
             >
-              <Text style={styles.keyButtonText}>→</Text>
+              <Text style={equationInputStyles.keyButtonText}>→</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.keyButtonWide, { backgroundColor: colors.CLR_ACCENT }]}
+              style={[equationInputStyles.keyButtonWide, { backgroundColor: colors.CLR_ACCENT }]}
               onPress={deleteText}
             >
-              <Text style={styles.keyButtonText}>⌫</Text>
+              <Text style={equationInputStyles.keyButtonText}>⌫</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -274,73 +275,4 @@ export default function EquationInput({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 8,
-    fontSize: 16,
-  },
-  button: {
-    padding: 14,
-    alignItems: "center",
-    marginBottom: 10,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: 14,
-  },
-  keyboardContainer: {
-    marginTop: 10,
-    marginBottom: 15,
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  keyboardRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  keyButton: {
-    flex: 1,
-    height: 50,
-    marginHorizontal: 3,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  keyButtonWide: {
-    flex: 2,
-    height: 50,
-    marginHorizontal: 3,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  keyButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-});
 

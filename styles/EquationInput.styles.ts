@@ -1,0 +1,71 @@
+import { StyleSheet } from "react-native";
+
+export const equationInputStyles = StyleSheet.create({
+  input: {
+    borderWidth: 1,
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 8,
+    fontSize: 16,
+  },
+  button: {
+    padding: 14,
+    alignItems: "center",
+    marginBottom: 10,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 14,
+  },
+  keyboardContainer: {
+    marginTop: 10,
+    marginBottom: 15,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  keyboardRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  keyButton: {
+    flex: 1,
+    height: 50,
+    marginHorizontal: 3,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  keyButtonWide: {
+    flex: 2,
+    height: 50,
+    marginHorizontal: 3,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  keyButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+});
+

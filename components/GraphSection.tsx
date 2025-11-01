@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { TableItem } from "../types";
 import { getThemeColors } from "../constants/colors";
+import { graphSectionStyles } from "../styles/GraphSection.styles";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -24,38 +25,38 @@ export default function GraphSection({
   return (
     <View
       style={[
-        styles.sectionContainer,
+        graphSectionStyles.sectionContainer,
         { backgroundColor: colors.CLR_SURFACE, borderColor: colors.CLR_BORDER },
       ]}
     >
       <Text
         style={[
-          styles.sectionTitle,
+          graphSectionStyles.sectionTitle,
           { color: colors.CLR_ON_SURFACE, borderBottomColor: colors.CLR_BORDER },
         ]}
       >
         Tabla de Valores
       </Text>
-      <View style={[styles.tableList, { borderColor: colors.CLR_BORDER }]}>
+      <View style={[graphSectionStyles.tableList, { borderColor: colors.CLR_BORDER }]}>
         {filteredTableData.map((item, index) => (
           <View
             key={item.x.toString()}
             style={[
-              styles.tableRow,
+              graphSectionStyles.tableRow,
               index % 2 === 0
                 ? [
-                    styles.tableRowEven,
+                    graphSectionStyles.tableRowEven,
                     {
                       backgroundColor: isSecondDegree ? "#2A2A2A" : "#F5F5F5",
                     },
                   ]
-                : [styles.tableRowOdd, { backgroundColor: colors.CLR_SURFACE }],
+                : [graphSectionStyles.tableRowOdd, { backgroundColor: colors.CLR_SURFACE }],
             ]}
           >
-            <Text style={[styles.tableText, { color: colors.CLR_ON_SURFACE }]}>
+            <Text style={[graphSectionStyles.tableText, { color: colors.CLR_ON_SURFACE }]}>
               x = {item.x}
             </Text>
-            <Text style={[styles.tableText, { color: colors.CLR_ON_SURFACE }]}>
+            <Text style={[graphSectionStyles.tableText, { color: colors.CLR_ON_SURFACE }]}>
               y = {item.y}
             </Text>
           </View>
@@ -64,7 +65,7 @@ export default function GraphSection({
 
       <Text
         style={[
-          styles.sectionTitle,
+          graphSectionStyles.sectionTitle,
           { color: colors.CLR_ON_SURFACE, borderBottomColor: colors.CLR_BORDER },
         ]}
       >
@@ -103,7 +104,7 @@ export default function GraphSection({
           fromZero={false}
           withInnerLines={true}
           withOuterLines={false}
-          style={styles.chart}
+          style={graphSectionStyles.chart}
         />
 
         <View
@@ -127,7 +128,7 @@ export default function GraphSection({
         />
         <View
           style={[
-            styles.symbolizationBox,
+            graphSectionStyles.symbolizationBox,
             {
               backgroundColor: isSecondDegree ? "#2A2A2A" : "#FFF3E0",
               borderColor: isSecondDegree ? "#4F4F4F" : "#FFB74D",
@@ -136,43 +137,43 @@ export default function GraphSection({
         >
           <Text
             style={[
-              styles.sectionTitle,
+              graphSectionStyles.sectionTitle,
               { color: colors.CLR_ON_SURFACE, borderBottomColor: colors.CLR_BORDER },
             ]}
           >
             Simbolización de la Gráfica
           </Text>
-          <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+          <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
             • Eje X (horizontal): representa los valores de x.
           </Text>
           {isSecondDegree ? (
             <>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Eje Y (vertical): representa los valores de y = f(x) = ax² + bx +
                 c.
               </Text>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Línea turquesa: la parábola de la ecuación cuadrática.
               </Text>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Cruce con el eje X: soluciones de la ecuación (x donde y = 0).
               </Text>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Puntos: valores calculados para ver la forma de la parábola.
               </Text>
             </>
           ) : (
             <>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Eje Y (vertical): representa los valores de y = f(x) = ax + b.
               </Text>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Línea azul: la recta de la ecuación lineal.
               </Text>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Cruce con el eje X: solución de la ecuación (x donde y = 0).
               </Text>
-              <Text style={[styles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
+              <Text style={[graphSectionStyles.symbolText, { color: colors.CLR_ON_SURFACE }]}>
                 • Puntos: valores calculados para ver la pendiente de la recta.
               </Text>
             </>
@@ -182,56 +183,5 @@ export default function GraphSection({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 10,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-  },
-  tableList: {
-    maxHeight: 180,
-    marginBottom: 10,
-    borderRadius: 6,
-    overflow: "hidden",
-    borderWidth: 1,
-  },
-  tableRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-  },
-  tableRowEven: {},
-  tableRowOdd: {},
-  tableText: {
-    fontSize: 14,
-    fontFamily: "monospace",
-  },
-  chart: {
-    marginVertical: 10,
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  symbolizationBox: {
-    marginTop: 15,
-    padding: 10,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  symbolText: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 4,
-  },
-});
 
 

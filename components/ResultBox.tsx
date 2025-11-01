@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { getThemeColors } from "../constants/colors";
+import { resultBoxStyles } from "../styles/ResultBox.styles";
 
 interface ResultBoxProps {
   solution: string | null;
@@ -13,7 +14,7 @@ export default function ResultBox({ solution, isSecondDegree }: ResultBoxProps) 
   return (
     <View
       style={[
-        styles.resultBox,
+        resultBoxStyles.resultBox,
         {
           backgroundColor: colors.CLR_RESULT_BOX,
           borderColor: colors.CLR_RESULT_BORDER,
@@ -22,45 +23,19 @@ export default function ResultBox({ solution, isSecondDegree }: ResultBoxProps) 
       ]}
     >
       {solution ? (
-        <Text style={[styles.resultTextSolved, { color: colors.CLR_ON_SURFACE }]}>
+        <Text style={[resultBoxStyles.resultTextSolved, { color: colors.CLR_ON_SURFACE }]}>
           Resultado:{" "}
-          <Text style={[styles.solutionValue, { color: colors.CLR_SECONDARY }]}>
+          <Text style={[resultBoxStyles.solutionValue, { color: colors.CLR_SECONDARY }]}>
             x = {solution}
           </Text>
         </Text>
       ) : (
-        <Text style={[styles.resultTextPlaceholder, { color: colors.CLR_PLACEHOLDER }]}>
+        <Text style={[resultBoxStyles.resultTextPlaceholder, { color: colors.CLR_PLACEHOLDER }]}>
           Aquí aparecerá el resultado...
         </Text>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  resultBox: {
-    borderRadius: 8,
-    padding: 15,
-    minHeight: 60,
-    marginBottom: 15,
-    borderLeftWidth: 5,
-    justifyContent: "center",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  resultTextPlaceholder: {
-    fontSize: 16,
-  },
-  resultTextSolved: {
-    fontSize: 17,
-    fontWeight: "600",
-  },
-  solutionValue: {
-    fontWeight: "900",
-    fontSize: 18,
-  },
-});
 
 

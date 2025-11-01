@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Switch, StyleSheet } from "react-native";
+import { View, Text, Switch } from "react-native";
 import { getThemeColors } from "../constants/colors";
+import { equationTypeSwitchStyles } from "../styles/EquationTypeSwitch.styles";
 
 interface EquationTypeSwitchProps {
   isSecondDegree: boolean;
@@ -18,19 +19,19 @@ export default function EquationTypeSwitch({
   return (
     <View
       style={[
-        styles.switchContainer,
+        equationTypeSwitchStyles.switchContainer,
         { backgroundColor: colors.CLR_SURFACE, borderColor: colors.CLR_BORDER },
       ]}
     >
-      <Text style={[styles.switchLabel, { color: colors.CLR_ON_SURFACE }]}>
+      <Text style={[equationTypeSwitchStyles.switchLabel, { color: colors.CLR_ON_SURFACE }]}>
         Tipo de Ecuación:
       </Text>
-      <View style={styles.switchRow}>
+      <View style={equationTypeSwitchStyles.switchRow}>
         <Text
           style={[
-            styles.switchText,
+            equationTypeSwitchStyles.switchText,
             { color: colors.CLR_PLACEHOLDER },
-            !isSecondDegree && styles.switchTextActive,
+            !isSecondDegree && equationTypeSwitchStyles.switchTextActive,
           ]}
         >
           Primer Grado (ax + b = c)
@@ -43,9 +44,9 @@ export default function EquationTypeSwitch({
         />
         <Text
           style={[
-            styles.switchText,
+            equationTypeSwitchStyles.switchText,
             { color: colors.CLR_PLACEHOLDER },
-            isSecondDegree && styles.switchTextActive,
+            isSecondDegree && equationTypeSwitchStyles.switchTextActive,
           ]}
         >
           Segundo Grado (ax² + bx + c = d)
@@ -54,34 +55,5 @@ export default function EquationTypeSwitch({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  switchContainer: {
-    marginBottom: 20,
-    padding: 15,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  switchLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  switchRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  switchText: {
-    fontSize: 12,
-    flex: 1,
-    textAlign: "center",
-  },
-  switchTextActive: {
-    color: "#00BCD4",
-    fontWeight: "600",
-  },
-});
 
 
